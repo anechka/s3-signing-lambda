@@ -4,16 +4,16 @@ const bucketName = process.env.AWS_BUCKET_NAME;
 
 class UUIDGenerator {
     static generateFileNameForFile(filename) {
-        const hexString = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx".replace(/[x]/g, function () {
+        const hexString = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'.replace(/[x]/g, function () {
             const r = Math.random() * 16 | 0;
 
             return r.toString(16)
         });
 
-        const fileNameInfo = filename.split(".");
+        const fileNameInfo = filename.split('.');
         const fileExtension = fileNameInfo[fileNameInfo.length - 1];
 
-        return hexString + "." + fileExtension;
+        return hexString + '.' + fileExtension;
     }
 }
 
@@ -37,10 +37,10 @@ exports.handler = (event, context, callback) => {
         Expires: 3600,
         ContentType: event.contentType,
         Metadata: {
-            "filename": event.filePath,
-            "owner": event.owner
+            'original_filename': event.filePath,
+            'user_id': event.owner
         },
-        Tagging: `tag=document`//&owner=${event.owner}
+        Tagging: event.tags
     };
 
     s3.getSignedUrl('putObject', params, (err, url) => {
